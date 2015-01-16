@@ -44,21 +44,13 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     */
     
+    @IBAction func profileTapped(sender: UIBarButtonItem) {
+        self.performSegueWithIdentifier("profileSegue", sender: nil)
+    }
     
     @IBAction func snapBarButtonItemTapped(sender: UIBarButtonItem) {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-            var cameraController = UIImagePickerController()
-            cameraController.delegate = self
-            cameraController.sourceType = UIImagePickerControllerSourceType.Camera
-            
-            let mediaTypes:[AnyObject] = [kUTTypeImage]
-            cameraController.mediaTypes = mediaTypes
-            cameraController.allowsEditing = false
-            
-            self.presentViewController(cameraController, animated: true, completion: nil)
-            
-        }
-        else if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)
+        
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)
         {
             var photoLibraryController = UIImagePickerController()
             photoLibraryController.delegate = self
@@ -69,6 +61,17 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
             photoLibraryController.allowsEditing = false
             
             self.presentViewController(photoLibraryController, animated: true, completion: nil)
+        } else if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+            var cameraController = UIImagePickerController()
+            cameraController.delegate = self
+            cameraController.sourceType = UIImagePickerControllerSourceType.Camera
+            
+            let mediaTypes:[AnyObject] = [kUTTypeImage]
+            cameraController.mediaTypes = mediaTypes
+            cameraController.allowsEditing = false
+            
+            self.presentViewController(cameraController, animated: true, completion: nil)
+            
         }
         else {
             var alertController = UIAlertController(title: "Alert", message: "Your device does not support camera or photo library", preferredStyle: UIAlertControllerStyle.Alert)
