@@ -10,11 +10,17 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="SplashScreen" translatesAutoresizingMaskIntoConstraints="NO" id="BVh-hP-bDt">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="SplashScreen" translatesAutoresizingMaskIntoConstraints="NO" id="BVh-hP-bDt">
+                    <rect key="frame" x="40" y="60" width="336" height="348"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="BVh-hP-bDt" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="IrR-gT-leq"/>
+                <constraint firstAttribute="trailing" secondItem="BVh-hP-bDt" secondAttribute="trailing" id="LhU-JI-J6J"/>
+                <constraint firstAttribute="bottom" secondItem="BVh-hP-bDt" secondAttribute="bottom" id="dro-Hm-AWX"/>
+                <constraint firstItem="BVh-hP-bDt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="vla-lh-Dcd"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="548" y="455"/>

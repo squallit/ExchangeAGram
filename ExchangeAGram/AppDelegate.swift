@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return wasHandled
     }
     
-    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+    func applicationDidReceiverMemoryWarning(application: UIApplication) {
         NSURLCache.sharedURLCache().removeAllCachedResponses()
     }
 
