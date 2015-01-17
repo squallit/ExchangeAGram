@@ -2,7 +2,7 @@
 //  FeedItem.swift
 //  ExchangeAGram
 //
-//  Created by Son  Luu on 1/14/15.
+//  Created by Son  Luu on 1/16/15.
 //  Copyright (c) 2015 Clispo. All rights reserved.
 //
 
@@ -14,6 +14,10 @@ class FeedItem: NSManagedObject {
 
     @NSManaged var caption: String
     @NSManaged var image: NSData
+    @NSManaged var latitude: NSNumber
+    @NSManaged var longitude: NSNumber
     @NSManaged var thumbNail: NSData
+    @NSManaged var uniqueID: String
+    @NSManaged var filtered: NSNumber
 
 }

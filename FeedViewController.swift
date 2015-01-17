@@ -9,15 +9,30 @@
 import UIKit
 import MobileCoreServices
 import CoreData
+import MapKit
 
-class FeedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class FeedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var collectionView: UICollectionView!
    
     var feedArray:[AnyObject] = []
+    
+    var locationManager:CLLocationManager!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        let backgroundImage = UIImage(named: "AutumnBackground")
+        self.view.backgroundColor = UIColor(patternImage: backgroundImage!)
+        
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 100.0
+        locationManager.requestAlwaysAuthorization()
+        
+        locationManager.startUpdatingLocation()
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -50,18 +65,8 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBAction func snapBarButtonItemTapped(sender: UIBarButtonItem) {
         
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)
-        {
-            var photoLibraryController = UIImagePickerController()
-            photoLibraryController.delegate = self
-            photoLibraryController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            
-            let mediaTypes:[AnyObject] = [kUTTypeImage]
-            photoLibraryController.mediaTypes = mediaTypes
-            photoLibraryController.allowsEditing = false
-            
-            self.presentViewController(photoLibraryController, animated: true, completion: nil)
-        } else if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             var cameraController = UIImagePickerController()
             cameraController.delegate = self
             cameraController.sourceType = UIImagePickerControllerSourceType.Camera
@@ -72,8 +77,18 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
             
             self.presentViewController(cameraController, animated: true, completion: nil)
             
-        }
-        else {
+        } else if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary)
+        {
+            var photoLibraryController = UIImagePickerController()
+            photoLibraryController.delegate = self
+            photoLibraryController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            
+            let mediaTypes:[AnyObject] = [kUTTypeImage]
+            photoLibraryController.mediaTypes = mediaTypes
+            photoLibraryController.allowsEditing = false
+            
+            self.presentViewController(photoLibraryController, animated: true, completion: nil)
+        } else {
             var alertController = UIAlertController(title: "Alert", message: "Your device does not support camera or photo library", preferredStyle: UIAlertControllerStyle.Alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alertController, animated: true, completion: nil)
@@ -93,6 +108,12 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         feedItem.image = imageData
         feedItem.caption = "test caption"
         feedItem.thumbNail = thumbNail
+        feedItem.latitude = locationManager.location.coordinate.latitude
+        feedItem.longitude = locationManager.location.coordinate.longitude
+        let UUID = NSUUID().UUIDString
+        feedItem.uniqueID = UUID
+        feedItem.filtered = false
+        
         
         (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
         
@@ -115,7 +136,15 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         var cell:FeedCell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as FeedCell
         
         let thisItem = feedArray[indexPath.row] as FeedItem
-        cell.imageView.image = UIImage(data: thisItem.image)
+        
+        if thisItem.filtered == true {
+            let returnedImage = UIImage(data: thisItem.image)!
+            cell.imageView.image = UIImage(CGImage: returnedImage.CGImage, scale: 1.0, orientation: UIImageOrientation.Right)
+        }
+        else {
+            cell.imageView.image = UIImage(data: thisItem.image)
+        }
+        
         cell.captionLabel.text = thisItem.caption
         
         
@@ -129,6 +158,12 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         var filterVC = FilterViewController()
         filterVC.thisFeedItem = thisItem
         self.navigationController?.pushViewController(filterVC, animated: false)
+    }
+    
+    //CLLocationManagerDelegate
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        println("Locations = \(locations)")
+        
     }
 
 }
